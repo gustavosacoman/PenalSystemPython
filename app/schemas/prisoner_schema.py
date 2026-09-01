@@ -24,5 +24,4 @@ class PrisonerSchema(Schema):
             raise ValidationError("Original release date cannot be in the past.")
 
 class UpdatePrisonerSchema(PrisonerSchema):
-    class Meta:
-        partial = True
+    pass

@@ -6,7 +6,7 @@ bp = Blueprint("prisoners", __name__)
 
 prisoner_schema = PrisonerSchema()
 prisoners_schema = PrisonerSchema(many=True)
-update_schema = UpdatePrisonerSchema()
+update_schema = UpdatePrisonerSchema(partial=True)
 
 @bp.get("/")
 def get_all():
