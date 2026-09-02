@@ -1,0 +1,2177 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-09-02T16:44:03.000Z",
+  "__export_source": "insomnia.desktop.app:v8.0.0",
+  "resources": [
+    {
+      "_id": "wrk_penal_system",
+      "_type": "workspace",
+      "parentId": null,
+      "name": "PenalSystem API - demo de testes",
+      "description": "Colecao de testes manuais da API do sistema penal.\n\nComo rodar:\n1. Suba a API (flask run) e confira a variavel host no ambiente.\n2. Rode a pasta 1 (Prisioneiro) do topo pra baixo: ela cria o Joao (CPF 11111111111) e a Maria (CPF 22222222222).\n3. As demais pastas usam o CPF, entao quase nada precisa de id.\n4. Onde o id e necessario (book_id, work_day_id, study_id), copie o id da resposta anterior pro ambiente (Manage Environments).\n\nO nome de cada request ja diz o status esperado.\n5. Para repetir a demo do zero, rode a pasta 8 inteira no fim (o ultimo request apaga o Joao e libera CPF e ISBNs).",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_penal_system",
+      "name": "Base Environment",
+      "data": {
+        "host": "http://127.0.0.1:5000",
+        "cpf": "11111111111",
+        "cpf2": "22222222222",
+        "prisoner_id": "cole-o-id-do-joao-aqui",
+        "book_id": "cole-o-id-do-livro-aqui",
+        "work_day_id": "cole-o-id-do-dia-aqui",
+        "study_id": "cole-o-id-do-estudo-aqui"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "host",
+          "cpf",
+          "cpf2",
+          "prisoner_id",
+          "book_id",
+          "work_day_id",
+          "study_id"
+        ]
+      },
+      "metaSortKey": 1,
+      "isPrivate": false
+    },
+    {
+      "_id": "env_5099",
+      "_type": "environment",
+      "parentId": "env_base",
+      "name": "Porta 5099 (servidor de teste)",
+      "data": {
+        "host": "http://127.0.0.1:5099"
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "host"
+        ]
+      },
+      "metaSortKey": 2,
+      "isPrivate": false
+    },
+    {
+      "_id": "fld_0_health",
+      "_type": "request_group",
+      "parentId": "wrk_penal_system",
+      "name": "0. Health",
+      "description": "Confere se a API esta de pe antes de comecar.",
+      "environment": {},
+      "metaSortKey": 100
+    },
+    {
+      "_id": "req_000",
+      "_type": "request",
+      "parentId": "fld_0_health",
+      "name": "GET health -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/health",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 101,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "fld_1_prisoner",
+      "_type": "request_group",
+      "parentId": "wrk_penal_system",
+      "name": "1. Prisioneiro (rode primeiro)",
+      "description": "Cria os dois presos que todas as outras pastas usam. Depois de criar o Joao, copie o id da resposta para a variavel prisoner_id do ambiente.",
+      "environment": {},
+      "metaSortKey": 201
+    },
+    {
+      "_id": "req_001",
+      "_type": "request",
+      "parentId": "fld_1_prisoner",
+      "name": "POST cria Joao -> 201",
+      "description": "Copie o data.id da resposta para a variavel prisoner_id.",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Joao Silva\",\n  \"cpf\": \"{{ _.cpf }}\",\n  \"birth_date\": \"1990-05-10\",\n  \"arrival_date\": \"2026-01-10\",\n  \"original_release_date\": \"2029-01-10\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 202,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_002",
+      "_type": "request",
+      "parentId": "fld_1_prisoner",
+      "name": "POST cria Maria -> 201",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Maria Souza\",\n  \"cpf\": \"{{ _.cpf2 }}\",\n  \"birth_date\": \"1985-03-02\",\n  \"arrival_date\": \"2026-02-01\",\n  \"original_release_date\": \"2030-06-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 203,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_003",
+      "_type": "request",
+      "parentId": "fld_1_prisoner",
+      "name": "POST CPF repetido -> 409",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Clone\",\n  \"cpf\": \"{{ _.cpf }}\",\n  \"birth_date\": \"1990-05-10\",\n  \"arrival_date\": \"2026-01-10\",\n  \"original_release_date\": \"2029-01-10\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 204,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_004",
+      "_type": "request",
+      "parentId": "fld_1_prisoner",
+      "name": "POST datas invalidas -> 422",
+      "description": "Chegada no futuro e soltura no passado: as duas validacoes disparam juntas.",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Data errada\",\n  \"cpf\": \"33333333333\",\n  \"birth_date\": \"1990-05-10\",\n  \"arrival_date\": \"2030-01-10\",\n  \"original_release_date\": \"2020-01-10\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 205,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_005",
+      "_type": "request",
+      "parentId": "fld_1_prisoner",
+      "name": "GET lista paginada -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 206,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_006",
+      "_type": "request",
+      "parentId": "fld_1_prisoner",
+      "name": "GET filtro ?name= -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/?name=joao",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 207,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_007",
+      "_type": "request",
+      "parentId": "fld_1_prisoner",
+      "name": "GET filtro ?cpf= -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/?cpf={{ _.cpf2 }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 208,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_008",
+      "_type": "request",
+      "parentId": "fld_1_prisoner",
+      "name": "GET paginacao ?page=1&per_page=1 -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/?page=1&per_page=1",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 209,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_009",
+      "_type": "request",
+      "parentId": "fld_1_prisoner",
+      "name": "GET por CPF -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 210,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_010",
+      "_type": "request",
+      "parentId": "fld_1_prisoner",
+      "name": "GET por UUID -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/{{ _.prisoner_id }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 211,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_011",
+      "_type": "request",
+      "parentId": "fld_1_prisoner",
+      "name": "GET inexistente -> 404",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/00000000000",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 212,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_012",
+      "_type": "request",
+      "parentId": "fld_1_prisoner",
+      "name": "PUT atualiza -> 200",
+      "description": "",
+      "method": "PUT",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Joao Silva Jr\",\n  \"cpf\": \"{{ _.cpf }}\",\n  \"birth_date\": \"1990-05-10\",\n  \"arrival_date\": \"2026-01-10\",\n  \"original_release_date\": \"2029-01-10\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 213,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_013",
+      "_type": "request",
+      "parentId": "fld_1_prisoner",
+      "name": "PATCH parcial -> 200",
+      "description": "",
+      "method": "PATCH",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Joao S. Jr\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 214,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_014",
+      "_type": "request",
+      "parentId": "fld_8_limpeza",
+      "name": "DELETE Maria -> 204 (cascade nas atividades dela)",
+      "description": "So rode no fim da demo: apaga a Maria e tudo que for dela (cascade).",
+      "method": "DELETE",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf2 }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 986,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "fld_2_books",
+      "_type": "request_group",
+      "parentId": "wrk_penal_system",
+      "name": "2. Livros",
+      "description": "Livro remite 3 dias e tem teto de 12 por ano. Copie o id do primeiro POST para book_id.",
+      "environment": {},
+      "metaSortKey": 315
+    },
+    {
+      "_id": "req_015",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "POST cria livro (por CPF) -> 201",
+      "description": "Copie o data.id para a variavel book_id.",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/books",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"isbn\": \"978-1\",\n  \"title\": \"Dom Casmurro\",\n  \"author\": \"Machado de Assis\",\n  \"date\": \"2026-03-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 316,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_016",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "POST outro livro (por UUID) -> 201",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.prisoner_id }}/books",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"isbn\": \"978-2\",\n  \"title\": \"Grande Sertao\",\n  \"author\": \"Guimaraes Rosa\",\n  \"date\": \"2026-03-05\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 317,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_017",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "POST ISBN repetido -> 409",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/books",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"isbn\": \"978-1\",\n  \"title\": \"Outro\",\n  \"author\": \"Alguem\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 318,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_018",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "POST data futura -> 422",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/books",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"isbn\": \"978-9\",\n  \"title\": \"Futuro\",\n  \"author\": \"X\",\n  \"date\": \"2027-01-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 319,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_019",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "POST preso inexistente -> 404",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/99999999999/books",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"isbn\": \"978-8\",\n  \"title\": \"A\",\n  \"author\": \"B\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 320,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_020",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "GET lista paginada -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/books/",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 321,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_021",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "GET filtro ?title= -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/books/?title=casmurro",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 322,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_022",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "GET filtro ?author= -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/books/?author=rosa",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 323,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_023",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "GET filtro ?isbn= -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/books/?isbn=978-1",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 324,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_024",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "GET paginacao ?per_page=1&page=2 -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/books/?per_page=1&page=2",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 325,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_025",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "GET por id -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/books/{{ _.book_id }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 326,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_026",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "GET id inexistente -> 404",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/books/nao-existe",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 327,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_027",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "GET livros do preso -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/books",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 328,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_028",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "PUT atualiza -> 200",
+      "description": "",
+      "method": "PUT",
+      "url": "{{ _.host }}/api/books/{{ _.book_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"isbn\": \"978-1\",\n  \"title\": \"Dom Casmurro (rev)\",\n  \"author\": \"Machado de Assis\",\n  \"date\": \"2026-03-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 329,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_029",
+      "_type": "request",
+      "parentId": "fld_2_books",
+      "name": "PATCH parcial -> 200",
+      "description": "",
+      "method": "PATCH",
+      "url": "{{ _.host }}/api/books/{{ _.book_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Dom Casmurro 2ed\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 330,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_030",
+      "_type": "request",
+      "parentId": "fld_8_limpeza",
+      "name": "DELETE livro -> 204 (devolve 3 dias e o contador)",
+      "description": "Estorna os 3 dias e decrementa o contador do preso.",
+      "method": "DELETE",
+      "url": "{{ _.host }}/api/books/{{ _.book_id }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 984,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "fld_3_dow",
+      "_type": "request_group",
+      "parentId": "wrk_penal_system",
+      "name": "3. Dias de trabalho",
+      "description": "Remite 1 dia e aceita no maximo um registro por data. Copie o id do primeiro POST para work_day_id.",
+      "environment": {},
+      "metaSortKey": 431
+    },
+    {
+      "_id": "req_031",
+      "_type": "request",
+      "parentId": "fld_3_dow",
+      "name": "POST cria (por CPF) -> 201",
+      "description": "Copie o data.id para work_day_id.",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/days-of-work",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Cozinha\",\n  \"date\": \"2026-03-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 432,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_032",
+      "_type": "request",
+      "parentId": "fld_3_dow",
+      "name": "POST outro dia -> 201",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.prisoner_id }}/days-of-work",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Faxina\",\n  \"date\": \"2026-03-02\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 433,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_033",
+      "_type": "request",
+      "parentId": "fld_3_dow",
+      "name": "POST mesma data -> 409",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/days-of-work",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Outra tarefa\",\n  \"date\": \"2026-03-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 434,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_034",
+      "_type": "request",
+      "parentId": "fld_3_dow",
+      "name": "POST data futura -> 422",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/days-of-work",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Amanha\",\n  \"date\": \"2027-01-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 435,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_035",
+      "_type": "request",
+      "parentId": "fld_3_dow",
+      "name": "GET lista paginada -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/days-of-work/",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 436,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_036",
+      "_type": "request",
+      "parentId": "fld_3_dow",
+      "name": "GET filtro ?description= -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/days-of-work/?description=faxina",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 437,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_037",
+      "_type": "request",
+      "parentId": "fld_3_dow",
+      "name": "GET por id -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/days-of-work/{{ _.work_day_id }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 438,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_038",
+      "_type": "request",
+      "parentId": "fld_3_dow",
+      "name": "GET do preso + faixa de datas -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/days-of-work?date_from=2026-03-02&date_to=2026-03-31",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 439,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_039",
+      "_type": "request",
+      "parentId": "fld_3_dow",
+      "name": "PUT atualiza -> 200",
+      "description": "",
+      "method": "PUT",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/days-of-work/{{ _.work_day_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Cozinha (turno 2)\",\n  \"date\": \"2026-03-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 440,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_040",
+      "_type": "request",
+      "parentId": "fld_3_dow",
+      "name": "PATCH parcial -> 200",
+      "description": "",
+      "method": "PATCH",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/days-of-work/{{ _.work_day_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Cozinha turno 3\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 441,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_041",
+      "_type": "request",
+      "parentId": "fld_3_dow",
+      "name": "PUT com outro preso -> 404",
+      "description": "Checagem de dono: o dia nao e da Maria.",
+      "method": "PUT",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf2 }}/days-of-work/{{ _.work_day_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Roubo\",\n  \"date\": \"2026-03-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 442,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_042",
+      "_type": "request",
+      "parentId": "fld_8_limpeza",
+      "name": "DELETE dia de trabalho -> 204 (devolve 1 dia)",
+      "description": "",
+      "method": "DELETE",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/days-of-work/{{ _.work_day_id }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 985,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "fld_4_studies",
+      "_type": "request_group",
+      "parentId": "wrk_penal_system",
+      "name": "4. Estudos (filtro + paginacao)",
+      "description": "Trabalho novo: filtro por subject/date_from/date_to, paginacao e rotas por preso. Copie o id do primeiro POST para study_id.",
+      "environment": {},
+      "metaSortKey": 543
+    },
+    {
+      "_id": "req_043",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "POST cria (por CPF) -> 201 com envelope",
+      "description": "Resposta vem como {message, data}, igual livro e dia de trabalho. Copie o data.id para study_id.",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"subject\": \"Matematica\",\n  \"date\": \"2026-04-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 544,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_044",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "POST cria (por UUID) -> 201",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.prisoner_id }}/studies",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"subject\": \"Portugues\",\n  \"date\": \"2026-04-02\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 545,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_045",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "POST terceiro estudo -> 201",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"subject\": \"Matematica Avancada\",\n  \"date\": \"2026-04-03\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 546,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_046",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "POST sem date (usa hoje) -> 201",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"subject\": \"Sem data informada\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 547,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_047",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "GET lista paginada -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/studies/",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 548,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_048",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "GET filtro ?subject= -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/studies/?subject=matem",
+      "body": {
+        "mimeType": "application/json",
+        "text": "\"ilike: pega Matematica e Matematica Avancada, sem ligar pra maiuscula.\""
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 549,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_049",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "GET filtro ?date_from= -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/studies/?date_from=2026-04-02",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 550,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_050",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "GET filtro ?date_to= -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/studies/?date_to=2026-04-01",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 551,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_051",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "GET faixa date_from+date_to -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/studies/?date_from=2026-04-01&date_to=2026-04-02",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 552,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_052",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "GET paginacao ?per_page=2&page=2 -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/studies/?per_page=2&page=2",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 553,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_053",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "GET ?prisoner_id= (aceita CPF) -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/studies/?prisoner_id={{ _.cpf }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 554,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_054",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "GET ?prisoner_id inexistente -> 404",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/studies/?prisoner_id=99999999999",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 555,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_055",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "GET estudos do preso -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 556,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_056",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "GET estudos do preso + filtro -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies?subject=portu",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 557,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_057",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "GET por id -> 200",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/studies/{{ _.study_id }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 558,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_058",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "GET id inexistente -> 404",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/studies/nao-existe",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 559,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_059",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "PUT atualiza -> 200 com envelope",
+      "description": "",
+      "method": "PUT",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies/{{ _.study_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"subject\": \"Matematica revisada\",\n  \"date\": \"2026-04-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 560,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_060",
+      "_type": "request",
+      "parentId": "fld_4_studies",
+      "name": "PATCH parcial -> 200",
+      "description": "",
+      "method": "PATCH",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies/{{ _.study_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"subject\": \"Matematica III\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 561,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_061",
+      "_type": "request",
+      "parentId": "fld_8_limpeza",
+      "name": "DELETE estudo -> 204 (devolve 1 dia de pena)",
+      "description": "Devolve o dia de pena que tinha sido remido.",
+      "method": "DELETE",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies/{{ _.study_id }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 983,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "fld_5_bug500",
+      "_type": "request_group",
+      "parentId": "wrk_penal_system",
+      "name": "5. BUG CORRIGIDO: PUT sem date dava 500",
+      "description": "Antes do fix, mandar PUT sem o campo date gravava NULL numa coluna NOT NULL e a API respondia 500 (IntegrityError). Causa: load_default=None no schema fazia o marshmallow inventar date=None quando o campo nem vinha. Hoje os tres respondem 200.",
+      "environment": {},
+      "metaSortKey": 662
+    },
+    {
+      "_id": "req_062",
+      "_type": "request",
+      "parentId": "fld_5_bug500",
+      "name": "PUT livro sem date -> 200 (era 500)",
+      "description": "",
+      "method": "PUT",
+      "url": "{{ _.host }}/api/books/{{ _.book_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"isbn\": \"978-1\",\n  \"title\": \"Livro sem date no payload\",\n  \"author\": \"Machado de Assis\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 663,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_063",
+      "_type": "request",
+      "parentId": "fld_5_bug500",
+      "name": "PUT estudo sem date -> 200 (era 500)",
+      "description": "",
+      "method": "PUT",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies/{{ _.study_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"subject\": \"Estudo sem date no payload\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 664,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_064",
+      "_type": "request",
+      "parentId": "fld_5_bug500",
+      "name": "PUT dia de trabalho sem date -> 200",
+      "description": "Esse ja funcionava por acaso (o service testava truthiness), mas o schema foi corrigido junto.",
+      "method": "PUT",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/days-of-work/{{ _.work_day_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Sem date no payload\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 665,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_065",
+      "_type": "request",
+      "parentId": "fld_5_bug500",
+      "name": "POST livro sem date -> 201 (data de hoje)",
+      "description": "O default da coluna (date.today) continua valendo depois do fix.",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/books",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"isbn\": \"978-sem-data\",\n  \"title\": \"Sem data\",\n  \"author\": \"Z\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 666,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "fld_6_regras",
+      "_type": "request_group",
+      "parentId": "wrk_penal_system",
+      "name": "6. Regras de negocio (409 / 422)",
+      "description": "Estudo era a unica atividade sem trava: dava pra postar N estudos no mesmo dia e zerar a pena, e aceitava data futura. Agora segue a mesma regra do dia de trabalho.",
+      "environment": {},
+      "metaSortKey": 766
+    },
+    {
+      "_id": "req_066",
+      "_type": "request",
+      "parentId": "fld_6_regras",
+      "name": "POST estudo repetido no mesmo dia -> 409",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"subject\": \"Estudo duplicado\",\n  \"date\": \"2026-04-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 767,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_067",
+      "_type": "request",
+      "parentId": "fld_6_regras",
+      "name": "POST estudo com data futura -> 422",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"subject\": \"Estudo do futuro\",\n  \"date\": \"2030-01-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 768,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_068",
+      "_type": "request",
+      "parentId": "fld_6_regras",
+      "name": "PATCH estudo para data ja ocupada -> 409",
+      "description": "",
+      "method": "PATCH",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies/{{ _.study_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"date\": \"2026-04-02\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 769,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_069",
+      "_type": "request",
+      "parentId": "fld_6_regras",
+      "name": "PATCH estudo mantendo a propria data -> 200",
+      "description": "A checagem ignora o proprio registro, senao salvar duas vezes daria 409.",
+      "method": "PATCH",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies/{{ _.study_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"date\": \"2026-04-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 770,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_070",
+      "_type": "request",
+      "parentId": "fld_6_regras",
+      "name": "POST dia de trabalho repetido -> 409",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/days-of-work",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"description\": \"Duplicado\",\n  \"date\": \"2026-03-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 771,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_071",
+      "_type": "request",
+      "parentId": "fld_6_regras",
+      "name": "POST 13o livro do ano (409 so depois de 12)",
+      "description": "So responde 409 depois de 12 livros no mesmo ano. Teto anual existe so para livro.",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/books",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"isbn\": \"978-13\",\n  \"title\": \"Livro 13\",\n  \"author\": \"A\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 772,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "fld_7_contrato",
+      "_type": "request_group",
+      "parentId": "wrk_penal_system",
+      "name": "7. Contrato e checagem de dono",
+      "description": "Estudo passou a seguir o molde do dia de trabalho: preso na rota, envelope na resposta e 404 pra quem mexer em estudo dos outros.",
+      "environment": {},
+      "metaSortKey": 872
+    },
+    {
+      "_id": "req_072",
+      "_type": "request",
+      "parentId": "fld_7_contrato",
+      "name": "POST na rota antiga /studies/ -> 405",
+      "description": "A escrita migrou para /api/prisoners/<identifier>/studies.",
+      "method": "POST",
+      "url": "{{ _.host }}/api/studies/",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"prisoner_id\": \"{{ _.prisoner_id }}\",\n  \"subject\": \"Rota velha\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 873,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_073",
+      "_type": "request",
+      "parentId": "fld_7_contrato",
+      "name": "PUT estudo de outro preso -> 404",
+      "description": "",
+      "method": "PUT",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf2 }}/studies/{{ _.study_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"subject\": \"Roubado\",\n  \"date\": \"2026-04-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 874,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_074",
+      "_type": "request",
+      "parentId": "fld_7_contrato",
+      "name": "PATCH estudo de outro preso -> 404",
+      "description": "",
+      "method": "PATCH",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf2 }}/studies/{{ _.study_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"subject\": \"Roubado\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 875,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_075",
+      "_type": "request",
+      "parentId": "fld_7_contrato",
+      "name": "DELETE estudo de outro preso -> 404",
+      "description": "",
+      "method": "DELETE",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf2 }}/studies/{{ _.study_id }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 876,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_076",
+      "_type": "request",
+      "parentId": "fld_7_contrato",
+      "name": "PATCH mandando prisoner_id no corpo -> 422",
+      "description": "Antes respondia 200 e ignorava calado; hoje o campo e dump_only e o payload e recusado.",
+      "method": "PATCH",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies/{{ _.study_id }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"subject\": \"Tentando trocar de dono\",\n  \"prisoner_id\": \"{{ _.prisoner_id }}\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 877,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_077",
+      "_type": "request",
+      "parentId": "fld_7_contrato",
+      "name": "POST estudo sem subject -> 422",
+      "description": "",
+      "method": "POST",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}/studies",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"date\": \"2026-05-01\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 878,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_078",
+      "_type": "request",
+      "parentId": "fld_7_contrato",
+      "name": "GET ?page=abc -> 400",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/studies/?page=abc",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 879,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_079",
+      "_type": "request",
+      "parentId": "fld_7_contrato",
+      "name": "GET ?page=0 -> 400",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/studies/?page=0",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 880,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_080",
+      "_type": "request",
+      "parentId": "fld_7_contrato",
+      "name": "GET ?per_page=9999 -> 200 (teto de 100)",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/studies/?per_page=9999",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 881,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "fld_8_limpeza",
+      "_type": "request_group",
+      "parentId": "wrk_penal_system",
+      "name": "8. Limpeza / DELETE (rode por ultimo)",
+      "description": "Os DELETE ficam aqui de proposito: rodando de cima pra baixo, apagar o estudo/livro/dia no meio da demo derrubaria os ids que as pastas 5, 6 e 7 usam. Aqui tambem da pra mostrar o estorno da pena: veja o updated_release_date antes e depois.",
+      "environment": {},
+      "metaSortKey": 981
+    },
+    {
+      "_id": "req_pena_antes",
+      "_type": "request",
+      "parentId": "fld_8_limpeza",
+      "name": "GET preso ANTES dos deletes -> 200",
+      "description": "Anote o updated_release_date.",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 982,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_pena_depois",
+      "_type": "request",
+      "parentId": "fld_8_limpeza",
+      "name": "GET preso DEPOIS dos deletes -> 200",
+      "description": "updated_release_date voltou: +1 do estudo, +3 do livro, +1 do dia de trabalho.",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 987,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_maria_404",
+      "_type": "request",
+      "parentId": "fld_8_limpeza",
+      "name": "GET Maria depois do delete -> 404",
+      "description": "",
+      "method": "GET",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf2 }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 988,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    },
+    {
+      "_id": "req_del_joao",
+      "_type": "request",
+      "parentId": "fld_8_limpeza",
+      "name": "DELETE Joao -> 204 (zera a demo pra rodar de novo)",
+      "description": "Apaga o Joao e, por cascade, os livros/estudos/dias dele. Sem isso, rodar a colecao de novo no mesmo banco da 409 de CPF e de ISBN repetido.",
+      "method": "DELETE",
+      "url": "{{ _.host }}/api/prisoners/{{ _.cpf }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 989,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global"
+    }
+  ]
+}
