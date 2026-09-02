@@ -6,6 +6,32 @@ from app.services.prisoner_service import get_by_id
 from app.errors import ResourceNotFound
 
 
+def build_query(filters: dict, prisoner_id: str | None = None):
+    query = db.select(Study)
+
+    if prisoner_id:
+        query = query.where(Study.prisoner_id == prisoner_id)
+
+    subject = filters.get("subject")
+    if subject:
+        query = query.where(Study.subject.ilike(f"%{subject}%"))
+
+    date_from = filters.get("date_from")
+    if date_from:
+        query = query.where(Study.date >= date_from)
+
+    date_to = filters.get("date_to")
+    if date_to:
+        query = query.where(Study.date <= date_to)
+
+    return query.order_by(Study.date.desc())
+
+
+def build_query_for_prisoner(prisoner_id: str, filters: dict):
+    prisoner = get_by_id_from_prisoner(prisoner_id)
+    return build_query(filters, prisoner_id=prisoner.id)
+
+
 def get_all() -> list[Study]:
     return list(
         db.session.scalars(

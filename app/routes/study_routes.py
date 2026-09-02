@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 
 from app.services import study_service
 from app.schemas.study_schema import StudySchema
+from app.pagination import paginate
 
 
 bp = Blueprint("studies", __name__)
@@ -15,11 +16,11 @@ def get_all():
     prisoner_id = request.args.get("prisoner_id")
 
     if prisoner_id:
-        studies = study_service.get_by_prisoner_id(prisoner_id)
+        query = study_service.build_query_for_prisoner(prisoner_id, request.args)
     else:
-        studies = study_service.get_all()
+        query = study_service.build_query(request.args)
 
-    return jsonify(studies_schema.dump(studies)), 200
+    return jsonify(paginate(query, studies_schema)), 200
 
 
 @bp.get("/<study_id>")
