@@ -6,6 +6,19 @@ from app.services.prisoner_service import get_by_id, get_by_cpf
 from app.errors import ResourceNotFound
 
 
+def get_all(identifier: str) -> list[DayOfWork]:
+    if len(identifier) == 36:
+        prisoner = get_by_id(identifier)
+    else:
+        prisoner = get_by_cpf(identifier)
+
+    return list(
+        db.session.scalars(
+            db.select(DayOfWork).where(DayOfWork.prisoner_id == prisoner.id)
+        )
+    )
+
+
 def create(identifier: str, data: dict) -> DayOfWork:
     if len(identifier) == 36:
         prisoner = get_by_id(identifier)

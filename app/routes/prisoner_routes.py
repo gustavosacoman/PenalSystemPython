@@ -8,8 +8,9 @@ bp = Blueprint("prisoners", __name__)
 
 prisoner_schema = PrisonerSchema()
 prisoners_schema = PrisonerSchema(many=True)
-update_schema = UpdatePrisonerSchema()
+update_schema = UpdatePrisonerSchema(partial=True)
 day_of_work_schema = DayOfWorkSchema()
+day_of_works_schema = DayOfWorkSchema(many=True)
 
 
 @bp.get("/")
@@ -48,6 +49,12 @@ def create_day_of_work(identifier: str):
     data = day_of_work_schema.load(request.json)
     work_day = day_of_work_service.create(identifier, data)
     return jsonify(day_of_work_schema.dump(work_day)), 201
+
+
+@bp.get("/<identifier>/days-of-work")
+def get_days_of_work(identifier: str):
+    work_days = day_of_work_service.get_all(identifier)
+    return jsonify(day_of_works_schema.dump(work_days)), 200
 
 
 @bp.delete("/<identifier>/days-of-work/<work_day_id>")
