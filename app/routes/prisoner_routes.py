@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.services import prisoner_service
 from app.schemas.prisoner_schema import PrisonerSchema, UpdatePrisonerSchema
+from app.pagination import paginate
 from app.schemas.day_of_work_schema import DayOfWorkSchema
 from app.services import day_of_work_service
 
@@ -15,8 +16,8 @@ day_of_works_schema = DayOfWorkSchema(many=True)
 
 @bp.get("/")
 def get_all():
-    prisoners = prisoner_service.get_all()
-    return jsonify(prisoners_schema.dump(prisoners)), 200
+    query = prisoner_service.build_query(request.args)
+    return jsonify(paginate(query, prisoners_schema)), 200
 
 @bp.get("/<identifier>")
 def get_one(identifier: str):
@@ -59,8 +60,8 @@ def create_day_of_work(identifier: str):
 
 @bp.get("/<identifier>/days-of-work")
 def get_days_of_work(identifier: str):
-    work_days = day_of_work_service.get_all(identifier)
-    return jsonify(day_of_works_schema.dump(work_days)), 200
+    query = day_of_work_service.build_query_for_prisoner(identifier, request.args)
+    return jsonify(paginate(query, day_of_works_schema)), 200
 
 
 @bp.delete("/<identifier>/days-of-work/<work_day_id>")

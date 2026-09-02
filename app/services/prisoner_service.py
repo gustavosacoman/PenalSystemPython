@@ -3,6 +3,20 @@ from app.extensions import db
 from app.models.prisoner import Prisoner
 from app.errors import ResourceNotFound, BusinessRuleViolation
 
+def build_query(filters: dict):
+    query = db.select(Prisoner)
+
+    name = filters.get("name")
+    if name:
+        query = query.where(Prisoner.name.ilike(f"%{name}%"))
+
+    cpf = filters.get("cpf")
+    if cpf:
+        query = query.where(Prisoner.cpf == cpf)
+
+    return query.order_by(Prisoner.name)
+
+
 def get_all() -> list[Prisoner]:
     return list(db.session.scalars(db.select(Prisoner)))
 

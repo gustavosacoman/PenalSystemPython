@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.services import book_service
 from app.schemas.book_schema import BookSchema, UpdateBookSchema
+from app.pagination import paginate
 
 bp = Blueprint("books", __name__)
 
@@ -10,8 +11,8 @@ patch_schema = UpdateBookSchema(partial=True)
 
 @bp.get("/books/")
 def get_all():
-    books = book_service.get_all()
-    return jsonify(books_schema.dump(books)), 200
+    query = book_service.build_query(request.args)
+    return jsonify(paginate(query, books_schema)), 200
 
 @bp.get("/books/<book_id>")
 def get_one(book_id: str):
@@ -20,8 +21,8 @@ def get_one(book_id: str):
 
 @bp.get("/prisoners/<identifier>/books")
 def get_by_prisoner(identifier: str):
-    books = book_service.get_by_prisoner(identifier)
-    return jsonify(books_schema.dump(books)), 200
+    query = book_service.build_query_for_prisoner(identifier, request.args)
+    return jsonify(paginate(query, books_schema)), 200
 
 @bp.post("/prisoners/<identifier>/books")
 def create(identifier: str):

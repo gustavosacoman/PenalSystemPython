@@ -6,6 +6,29 @@ from app.services.prisoner_service import get_by_id, get_by_cpf
 from app.errors import ResourceNotFound
 
 
+def build_query_for_prisoner(identifier: str, filters: dict):
+    if len(identifier) == 36:
+        prisoner = get_by_id(identifier)
+    else:
+        prisoner = get_by_cpf(identifier)
+
+    query = db.select(DayOfWork).where(DayOfWork.prisoner_id == prisoner.id)
+
+    description = filters.get("description")
+    if description:
+        query = query.where(DayOfWork.description.ilike(f"%{description}%"))
+
+    date_from = filters.get("date_from")
+    if date_from:
+        query = query.where(DayOfWork.date >= date_from)
+
+    date_to = filters.get("date_to")
+    if date_to:
+        query = query.where(DayOfWork.date <= date_to)
+
+    return query.order_by(DayOfWork.date.desc())
+
+
 def get_all(identifier: str) -> list[DayOfWork]:
     if len(identifier) == 36:
         prisoner = get_by_id(identifier)

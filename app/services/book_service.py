@@ -39,6 +39,32 @@ def _unregister_reading(prisoner) -> None:
     prisoner.updated_release_date += timedelta(days=DAYS_REDUCTION)
 
 
+def build_query(filters: dict, prisoner_id: str | None = None):
+    query = db.select(Book)
+
+    if prisoner_id:
+        query = query.where(Book.prisoner_id == prisoner_id)
+
+    title = filters.get("title")
+    if title:
+        query = query.where(Book.title.ilike(f"%{title}%"))
+
+    author = filters.get("author")
+    if author:
+        query = query.where(Book.author.ilike(f"%{author}%"))
+
+    isbn = filters.get("isbn")
+    if isbn:
+        query = query.where(Book.isbn == isbn)
+
+    return query.order_by(Book.date.desc())
+
+
+def build_query_for_prisoner(identifier: str, filters: dict):
+    prisoner = _resolve_prisoner(identifier)
+    return build_query(filters, prisoner_id=prisoner.id)
+
+
 def get_all() -> list[Book]:
     return list(db.session.scalars(db.select(Book)))
 
