@@ -5,7 +5,7 @@ class BookSchema(Schema):
 
     id = fields.Str(dump_only=True)
     prisoner_id = fields.Str(dump_only=True)
-    date = fields.Date(load_default=None)
+    date = fields.Date()
     isbn = fields.Str(required=True)
     title = fields.Str(required=True)
     author = fields.Str(required=True)
