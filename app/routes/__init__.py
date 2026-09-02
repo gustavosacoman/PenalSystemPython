@@ -8,5 +8,5 @@ def init_app(app: Flask):
     app.register_blueprint(prisoner_bp, url_prefix="/api/prisoners")
     app.register_blueprint(book_bp, url_prefix="/api")
     app.register_blueprint(day_of_work_bp, url_prefix="/api")
-    app.register_blueprint(study_bp, url_prefix="/api/studies")
+    app.register_blueprint(study_bp, url_prefix="/api")
 
