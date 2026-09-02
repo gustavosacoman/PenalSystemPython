@@ -51,6 +51,36 @@ def get_by_id(work_day_id: str) -> DayOfWork:
     return work_day
 
 
+def build_query_for_prisoner(identifier: str, filters: dict):
+    prisoner = _resolve_prisoner(identifier)
+
+    query = db.select(DayOfWork).where(DayOfWork.prisoner_id == prisoner.id)
+
+    description = filters.get("description")
+    if description:
+        query = query.where(DayOfWork.description.ilike(f"%{description}%"))
+
+    date_from = filters.get("date_from")
+    if date_from:
+        query = query.where(DayOfWork.date >= date_from)
+
+    date_to = filters.get("date_to")
+    if date_to:
+        query = query.where(DayOfWork.date <= date_to)
+
+    return query.order_by(DayOfWork.date.desc())
+
+
+def build_query(filters: dict):
+    query = db.select(DayOfWork)
+
+    description = filters.get("description")
+    if description:
+        query = query.where(DayOfWork.description.ilike(f"%{description}%"))
+
+    return query.order_by(DayOfWork.date.desc())
+
+
 def get_by_prisoner(identifier: str) -> list[DayOfWork]:
     prisoner = _resolve_prisoner(identifier)
     return list(
