@@ -6,7 +6,7 @@ bp = Blueprint("books", __name__)
 
 book_schema = BookSchema()
 books_schema = BookSchema(many=True)
-update_schema = UpdateBookSchema(partial=True)
+patch_schema = UpdateBookSchema(partial=True)
 
 @bp.get("/books/")
 def get_all():
@@ -31,11 +31,17 @@ def create(identifier: str):
 
 @bp.put("/books/<book_id>")
 def update(book_id: str):
-    data = update_schema.load(request.json)
+    data = UpdateBookSchema().load(request.json)
+    book = book_service.update(book_id, data)
+    return jsonify({"message": "Book updated successful!", "data": book_schema.dump(book)}), 200
+
+@bp.patch("/books/<book_id>")
+def patch(book_id: str):
+    data = patch_schema.load(request.json)
     book = book_service.update(book_id, data)
     return jsonify({"message": "Book updated successful!", "data": book_schema.dump(book)}), 200
 
 @bp.delete("/books/<book_id>")
 def delete(book_id: str):
     book_service.delete(book_id)
-    return jsonify({"message": "Book deleted successful"}), 200
+    return "", 204

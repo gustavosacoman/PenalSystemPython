@@ -8,7 +8,7 @@ bp = Blueprint("prisoners", __name__)
 
 prisoner_schema = PrisonerSchema()
 prisoners_schema = PrisonerSchema(many=True)
-update_schema = UpdatePrisonerSchema(partial=True)
+patch_schema = UpdatePrisonerSchema(partial=True)
 day_of_work_schema = DayOfWorkSchema()
 day_of_works_schema = DayOfWorkSchema(many=True)
 
@@ -34,14 +34,20 @@ def create():
 
 @bp.put("/<identifier>")
 def update(identifier: str):
-    data = update_schema.load(request.json)
+    data = prisoner_schema.load(request.json)
+    prisoner = prisoner_service.update(identifier, data)
+    return jsonify({"message": "Prisoner updated successful!", "data": prisoner_schema.dump(prisoner)}), 200
+
+@bp.patch("/<identifier>")
+def patch(identifier: str):
+    data = patch_schema.load(request.json)
     prisoner = prisoner_service.update(identifier, data)
     return jsonify({"message": "Prisoner updated successful!", "data": prisoner_schema.dump(prisoner)}), 200
 
 @bp.delete("/<identifier>")
 def delete(identifier: str):
     prisoner_service.delete(identifier)
-    return jsonify({"message": "Prisoner deleted successful"}), 200
+    return "", 204
 
 
 @bp.post("/<identifier>/days-of-work")
@@ -60,5 +66,5 @@ def get_days_of_work(identifier: str):
 @bp.delete("/<identifier>/days-of-work/<work_day_id>")
 def delete_day_of_work(identifier: str, work_day_id: str):
     day_of_work_service.delete(identifier, work_day_id)
-    return jsonify({"message": "Work day deleted successful"}), 200
+    return "", 204
 
