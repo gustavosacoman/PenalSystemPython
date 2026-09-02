@@ -15,4 +15,4 @@ class Activity(db.Model):
 
     @declared_attr
     def prisoner(cls):
-        return db.relationship("Prisoner")
+        return db.relationship("Prisoner", back_populates=cls.__tablename__)

@@ -20,5 +20,15 @@ class Prisoner(db.Model):
     books_counter = db.Column(db.Integer, default=0,  nullable=False)
     current_year = db.Column(db.Integer, nullable=False)
 
+    books = db.relationship(
+        "Book", back_populates="prisoner", cascade="all, delete-orphan"
+    )
+    studies = db.relationship(
+        "Study", back_populates="prisoner", cascade="all, delete-orphan"
+    )
+    days_of_work = db.relationship(
+        "DayOfWork", back_populates="prisoner", cascade="all, delete-orphan"
+    )
+
     def __repr__(self):
         return f"<Prisoner {self.name} - CPF: {self.cpf}>"
