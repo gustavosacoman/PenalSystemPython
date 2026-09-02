@@ -1,9 +1,23 @@
-from datetime import timedelta
+from datetime import date, timedelta
 
 from app.extensions import db
 from app.models.study import Study
 from app.services.prisoner_service import get_by_id
-from app.errors import ResourceNotFound
+from app.errors import ResourceNotFound, BusinessRuleViolation
+
+
+def _assert_date_is_free(prisoner_id: str, study_date, ignore_id: str | None = None) -> None:
+    query = db.select(Study).where(
+        Study.prisoner_id == prisoner_id,
+        Study.date == study_date,
+    )
+    if ignore_id:
+        query = query.where(Study.id != ignore_id)
+
+    if db.session.scalar(query):
+        raise BusinessRuleViolation(
+            f"Prisoner already has a study registered on {study_date}"
+        )
 
 
 def build_query(filters: dict, prisoner_id: str | None = None):
@@ -74,10 +88,13 @@ def get_by_id_from_prisoner(prisoner_id: str):
 def create(data: dict) -> Study:
     prisoner = get_by_id_from_prisoner(data["prisoner_id"])
 
+    study_date = data.get("date") or date.today()
+    _assert_date_is_free(prisoner.id, study_date)
+
     study = Study(
         prisoner_id=prisoner.id,
         subject=data["subject"],
-        date=data.get("date")
+        date=study_date
     )
     
     # Cada dia de estudo reduz 1 dia da pena.
@@ -99,6 +116,7 @@ def update(study_id: str, data: dict) -> Study:
         study.subject = data["subject"]
 
     if "date" in data:
+        _assert_date_is_free(study.prisoner_id, data["date"], ignore_id=study.id)
         study.date = data["date"]
 
     db.session.commit()
