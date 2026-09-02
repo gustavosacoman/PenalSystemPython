@@ -5,7 +5,7 @@ from app.models.abstractions.activity import Activity
 class Book(Activity):
     __tablename__ = "books"
 
-    isbn = db.Column(db.String(20), nullable=True)
+    isbn = db.Column(db.String(20), unique=True, nullable=False)
     title = db.Column(db.String(200), nullable=False)
     author = db.Column(db.String(150), nullable=False)
 

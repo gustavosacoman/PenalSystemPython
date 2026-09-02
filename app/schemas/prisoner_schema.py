@@ -15,8 +15,8 @@ class PrisonerSchema(Schema):
 
     @validates("arrival_date")
     def validate_arrival_date(self, value, **kwargs):
-        if value < date.today():
-            raise ValidationError("Arrival date cannot be in the past.")
+        if value > date.today():
+            raise ValidationError("Arrival date cannot be in the future.")
 
     @validates("original_release_date")
     def validate_release_date(self, value, **kwargs):
